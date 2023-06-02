@@ -35,7 +35,7 @@ class QueueSizeBasedExecutor extends SliceExecutor {
   }
 
   @Override
-  boolean shouldExecuteOnCallerThread(int index, int numTasks) {
+  public boolean shouldExecuteOnCallerThread(int index, int numTasks) {
     return super.shouldExecuteOnCallerThread(index, numTasks)
         || threadPoolExecutor.getQueue().size()
             >= (threadPoolExecutor.getMaximumPoolSize() * LIMITING_FACTOR);

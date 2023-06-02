@@ -110,11 +110,11 @@ abstract class AbstractKnnVectorQuery extends Query {
   }
 
   private TopDocs[] parallelSearch(
-      IndexSearcher.LeafSlice[] slices, Weight filterWeight, SliceExecutor sliceExecutor) {
+      LeafSlice[] slices, Weight filterWeight, SliceExecutor sliceExecutor) {
 
     List<FutureTask<TopDocs[]>> tasks = new ArrayList<>(slices.length);
     int segmentsCount = 0;
-    for (IndexSearcher.LeafSlice slice : slices) {
+    for (LeafSlice slice : slices) {
       segmentsCount += slice.leaves.length;
       tasks.add(
           new FutureTask<>(

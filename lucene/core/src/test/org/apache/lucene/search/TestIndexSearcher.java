@@ -248,7 +248,7 @@ public class TestIndexSearcher extends LuceneTestCase {
             new LinkedBlockingQueue<Runnable>(),
             new NamedThreadFactory("TestIndexSearcher"));
     IndexSearcher s = new IndexSearcher(r, service);
-    IndexSearcher.LeafSlice[] slices = s.getSlices();
+    LeafSlice[] slices = s.getSlices();
     assertNotNull(slices);
     assertEquals(1, slices.length);
     assertEquals(1, slices[0].leaves.length);
@@ -460,7 +460,7 @@ public class TestIndexSearcher extends LuceneTestCase {
     }
 
     @Override
-    boolean shouldExecuteOnCallerThread(int index, int numTasks) {
+    public boolean shouldExecuteOnCallerThread(int index, int numTasks) {
       return random().nextBoolean();
     }
   }

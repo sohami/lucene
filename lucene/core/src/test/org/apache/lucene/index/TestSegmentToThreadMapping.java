@@ -26,6 +26,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.LeafSlice;
 import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopDocs;
@@ -179,7 +180,7 @@ public class TestSegmentToThreadMapping extends LuceneTestCase {
     leafReaderContexts.add(new LeafReaderContext(secondMediumSegmentReader));
     leafReaderContexts.add(new LeafReaderContext(thirdMediumSegmentReader));
 
-    IndexSearcher.LeafSlice[] resultSlices = IndexSearcher.slices(leafReaderContexts, 250_000, 5);
+    LeafSlice[] resultSlices = IndexSearcher.slices(leafReaderContexts, 250_000, 5);
 
     assertTrue(resultSlices.length == 1);
 
@@ -208,7 +209,7 @@ public class TestSegmentToThreadMapping extends LuceneTestCase {
     leafReaderContexts.add(new LeafReaderContext(seventhLargeSegmentReader));
     leafReaderContexts.add(new LeafReaderContext(eigthLargeSegmentReader));
 
-    IndexSearcher.LeafSlice[] resultSlices = IndexSearcher.slices(leafReaderContexts, 250_000, 5);
+    LeafSlice[] resultSlices = IndexSearcher.slices(leafReaderContexts, 250_000, 5);
 
     assertTrue(resultSlices.length == 3);
 
@@ -233,7 +234,7 @@ public class TestSegmentToThreadMapping extends LuceneTestCase {
     leafReaderContexts.add(new LeafReaderContext(secondMediumSegmentReader));
     leafReaderContexts.add(new LeafReaderContext(thirdMediumSegmentReader));
 
-    IndexSearcher.LeafSlice[] resultSlices = IndexSearcher.slices(leafReaderContexts, 250_000, 5);
+    LeafSlice[] resultSlices = IndexSearcher.slices(leafReaderContexts, 250_000, 5);
 
     assertTrue(resultSlices.length == 3);
 
@@ -271,10 +272,10 @@ public class TestSegmentToThreadMapping extends LuceneTestCase {
 
     s.search(query, Integer.MAX_VALUE);
 
-    IndexSearcher.LeafSlice[] slices = s.getSlices();
+    LeafSlice[] slices = s.getSlices();
     assertNotNull(slices);
 
-    for (IndexSearcher.LeafSlice leafSlice : slices) {
+    for (LeafSlice leafSlice : slices) {
       LeafReaderContext[] leafReaderContexts = leafSlice.leaves;
       int previousDocBase = leafReaderContexts[0].docBase;
 
@@ -299,7 +300,7 @@ public class TestSegmentToThreadMapping extends LuceneTestCase {
           new LeafReaderContext(dummyIndexReader(random().nextInt((max - min) + 1) + min)));
     }
 
-    IndexSearcher.LeafSlice[] resultSlices = IndexSearcher.slices(leafReaderContexts, 250_000, 5);
+    LeafSlice[] resultSlices = IndexSearcher.slices(leafReaderContexts, 250_000, 5);
 
     assertTrue(resultSlices.length > 0);
   }

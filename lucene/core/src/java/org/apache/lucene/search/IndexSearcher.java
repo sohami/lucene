@@ -229,7 +229,7 @@ public class IndexSearcher {
   }
 
   // Package private for testing
-  IndexSearcher(IndexReaderContext context, Executor executor, SliceExecutor sliceExecutor) {
+  public IndexSearcher(IndexReaderContext context, Executor executor, SliceExecutor sliceExecutor) {
     assert context.isTopLevel
         : "IndexSearcher's ReaderContext must be topLevel for reader" + context.reader();
     assert (sliceExecutor == null) == (executor == null);
@@ -326,7 +326,7 @@ public class IndexSearcher {
    * MAX_DOCS_PER_SLICE will get their own thread
    */
   protected LeafSlice[] slices(List<LeafReaderContext> leaves) {
-    return slices(leaves, MAX_DOCS_PER_SLICE, MAX_SEGMENTS_PER_SLICE);
+    return sliceExecutor.computeSlices(leaves);
   }
 
   /** Static method to segregate LeafReaderContexts amongst multiple slices */
@@ -916,27 +916,6 @@ public class IndexSearcher {
   /* sugar for #getReader().getTopReaderContext() */
   public IndexReaderContext getTopReaderContext() {
     return readerContext;
-  }
-
-  /**
-   * A class holding a subset of the {@link IndexSearcher}s leaf contexts to be executed within a
-   * single thread.
-   *
-   * @lucene.experimental
-   */
-  public static class LeafSlice {
-
-    /**
-     * The leaves that make up this slice.
-     *
-     * @lucene.experimental
-     */
-    public final LeafReaderContext[] leaves;
-
-    public LeafSlice(List<LeafReaderContext> leavesList) {
-      Collections.sort(leavesList, Comparator.comparingInt(l -> l.docBase));
-      this.leaves = leavesList.toArray(new LeafReaderContext[0]);
-    }
   }
 
   @Override
